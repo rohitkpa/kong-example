@@ -149,7 +149,9 @@ services:
       - GITNESS_PRINCIPAL_ADMIN_EMAIL=admin@example.com
       - GITNESS_PRINCIPAL_ADMIN_PASSWORD=admin
       - GITNESS_USER_SIGNUP_ENABLED=true
-
+      - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs:ro
 
 volumes:
   postgres-data:
