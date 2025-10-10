@@ -151,7 +151,7 @@ services:
       - GITNESS_USER_SIGNUP_ENABLED=true
       - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
     volumes:
-      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - ./config/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
 
 volumes:
   postgres-data:
