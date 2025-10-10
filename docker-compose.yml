@@ -137,6 +137,7 @@ services:
   harness:
     image: harness/harness
     container_name: harness
+    platform: linux/amd64
     ports:
       - "3000:3000"
     networks:
@@ -153,6 +154,8 @@ services:
     volumes:
       - ./certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
       - ./harness_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 
 volumes:
   postgres-data:
