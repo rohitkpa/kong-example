@@ -145,6 +145,11 @@ services:
       - "app=harness"
       - "environment=local"
       - "service=cd-platform"
+    environment:
+      - GITNESS_PRINCIPAL_ADMIN_EMAIL=admin@example.com
+      - GITNESS_PRINCIPAL_ADMIN_PASSWORD=admin
+      - GITNESS_USER_SIGNUP_ENABLED=true
+
 
 volumes:
   postgres-data:
