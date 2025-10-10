@@ -14,7 +14,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+    labels:
+      - "app=postgres"
+      - "service=kong-database"
+  
   kong:
     image: kong:latest
     environment:
@@ -35,42 +38,119 @@ services:
     depends_on:
       kong-database:
         condition: service_healthy
-
+    labels:
+      - "app=kong"
+      - "service=api-gateway"
+  
   python-service:
     build: ./python-service
     ports:
       - "5000:5000"
     networks:
       - kong-net
-
+    labels:
+      - "app=python-service"
+      - "service=backend"
+  
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus 
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus.yml
       - prometheus-data:/prometheus
     ports:
       - "9090:9090"
     networks:
       - kong-net
-
+    command:
+      - '--config.file=/etc/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+    restart: unless-stopped
+    labels:
+      - "app=prometheus"
+      - "service=metrics"
+  
+  # Loki - Log aggregation system
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/loki-config.yml:/etc/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/local-config.yaml
+    networks:
+      - kong-net
+    restart: unless-stopped
+    labels:
+      - "app=loki"
+      - "service=logs"
+  
+  # Promtail - Collects logs from Docker containers
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    volumes:
+      - ./config/promtail-config.yml:/etc/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/config.yml
+    networks:
+      - kong-net
+    restart: unless-stopped
+    depends_on:
+      - loki
+    labels:
+      - "app=promtail"
+      - "service=log-collector"
+  
+  # Grafana - Dashboard for metrics
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "4000:3000"
     networks:
       - kong-net
     volumes:
+      - grafana-data:/var/lib/grafana
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:4000
     depends_on:
       - prometheus
+      - loki
+    restart: unless-stopped
+    labels:
+      - "app=grafana"
+      - "service=visualization"
+
+  # Harness - CI/CD
+  harness:
+    image: harness/harness
+    container_name: harness
+    ports:
+      - "3000:3000"
+    networks:
+      - kong-net
+    labels:
+      - "app=harness"
+      - "environment=local"
+      - "service=cd-platform"
 
 volumes:
   postgres-data:
   prometheus-data:
   grafana-data:
+  loki-data:
 
 networks:
   kong-net:

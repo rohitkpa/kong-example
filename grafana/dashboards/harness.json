@@ -1,0 +1,375 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "{container=\"harness\"}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Harness - All Logs",
+        "type": "logs"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 12,
+          "x": 0,
+          "y": 12
+        },
+        "id": 2,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "{container=\"harness\"} |~ \"(?i)error|exception|fatal\"",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Harness - Errors",
+        "type": "logs"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 12,
+          "x": 12,
+          "y": 12
+        },
+        "id": 3,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "{container=\"harness\"} |= \"auth\"",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Harness - Authentication Logs",
+        "type": "logs"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "tooltip": false,
+                "viz": false,
+                "legend": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 22
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "sum(count_over_time({container=\"harness\"}[1m]))",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Harness - Log Rate (per minute)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "tooltip": false,
+                "viz": false,
+                "legend": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 22
+        },
+        "id": 5,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "sum(count_over_time({container=\"harness\"} |~ \"(?i)error|exception|fatal\" [1m]))",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Harness - Error Rate (per minute)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 30
+        },
+        "id": 6,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "{container=~\"harness.*|manager|pipeline-service|platform-service\"}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "All Harness Services - Combined Logs",
+        "type": "logs"
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": ["harness", "logs", "loki"],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Harness Logs Dashboard",
+    "uid": "harness-logs",
+    "version": 0,
+    "weekStart": ""
+  }
