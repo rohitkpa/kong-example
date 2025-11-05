@@ -1,6 +1,6 @@
 resource "kubernetes_deployment" "python_service" {
   metadata {
-    name      = "python-service"
+    name = "python-service"
     labels = {
       app = "python-service"
     }
@@ -36,9 +36,23 @@ resource "kubernetes_deployment" "python_service" {
   }
 }
 
-data "kubernetes_service" "python_service" {
+resource "kubernetes_service" "python_service" {
   metadata {
-    name = "python-service"
+    name      = "python-service"
     namespace = "default"
+  }
+
+  spec {
+    type = var.python_service_type
+
+    selector = {
+      app = "python-service"
+    }
+
+    port {
+      port        = 80
+      target_port = var.python_service_port
+      protocol    = "TCP"
+    }
   }
 }
