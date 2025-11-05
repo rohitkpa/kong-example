@@ -40,5 +40,5 @@ variable "python_service_replicas" {
 variable "python_service_type" {
   description = "Kubernetes Service type for python-service"
   type        = string
-  default     = "ClusterIP"
+  default     = "LoadBalancer"
 }
