@@ -34,7 +34,7 @@ jobs:
           docker push rohitlabacr.azurecr.io/python-service:latest
     
       - name: Set AKS Context
-        uses: azure/set-aks-context@v3
+        uses: azure/aks-set-context@v4
         with:
           resource-group: rohit-lab
           cluster-name: aks-lab
